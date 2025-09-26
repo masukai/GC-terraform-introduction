@@ -3,20 +3,24 @@
 Google Cloud の基礎を Terraform でハンズオンするためのリポジトリです。Compute Engine のインスタンスを作成・削除する最小構成を題材に、`gcloud` CLI の初期セットアップから `terraform destroy` による後片付けまでをまとめています。対象記事の「terraform.tfstate を Cloud Storage に保存する」手前までをカバーします。
 
 ## 構成図
+
 ![構成図](docs/img/architecture.png)
 
 ## ディレクトリ構成
+
 - `modules/setup` : Compute Engine インスタンスを作成するモジュール
 - `environments/{dev,stg,prd}` : 環境ごとのルートモジュール。`variables.tf` でプロジェクトやリージョンを指定します
 - `docs/` : 図版などドキュメント類
 
 ## 事前準備
+
 - 課金が有効になっている Google Cloud プロジェクト
 - Terraform 1.5 以降（`terraform -version` で確認できます）
 - Google Cloud SDK (`gcloud` CLI)
 - 権限が十分なアカウント（プロジェクトオーナー、もしくは少なくとも Compute Admin 相当）
 
 ## gcloud CLI セットアップ
+
 1. Google Cloud SDK をインストールします。macOS の場合は `brew install --cask google-cloud-sdk`、その他の環境は公式ドキュメントに従ってください。
 2. ターミナルで `gcloud version` を実行し、 SDK が利用可能になっていることを確認します。
 3. `gcloud init` を実行してブラウザでログインし、今回使用するプロジェクトを選択します。
@@ -34,7 +38,9 @@ gcloud services enable compute.googleapis.com
 8. `gcloud auth list` でアクティブなアカウントを確認できれば準備完了です。
 
 ## Terraform の実行
+
 ### Terraform の準備
+
 1. このリポジトリを任意の場所にクローンし、`GC-terraform-introduction` ディレクトリに移動します。
 ```bash
 git clone <your-fork-or-clone-url>
@@ -62,6 +68,7 @@ terraform apply
 7. 適用後は `gcloud compute instances list` で VM が作成されていることを確認できます。Terraform の状態ファイル (`terraform.tfstate`) は環境ディレクトリに出力されるため、誤ってコミットしないよう注意してください。
 
 ### 後片付け（terraform destroy）
+
 1. リソースを削除する前に、現在の状態を再度確認する場合は `terraform plan -destroy` を実行します。
 2. 作成したリソースをすべて削除します。
 ```bash
@@ -71,9 +78,11 @@ terraform destroy
 3. 削除完了後、`gcloud compute instances list` でインスタンスが存在しないことを確認してください。
 
 ## 補足
+
 - 環境を切り替える場合は `environments/stg` や `environments/prd` に移動し、同様の手順を実行します。
 - 認証情報を切り替える際は `gcloud auth application-default login` を再実行するか、`gcloud auth application-default revoke` で一度削除してから設定し直してください。
 - 追加の API を有効化する場合は `gcloud services enable <API_NAME>` を実行します。`compute.googleapis.com` が有効になっていれば、このハンズオンは実行できます。
 
 ## 参考
+
 [Terraform で入門する Google Cloud【セットアップ編】](https://zenn.dev/oyasumipants/articles/8f0ac1a3395520)
